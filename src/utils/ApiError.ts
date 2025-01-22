@@ -7,7 +7,7 @@ class ApiError extends Error implements ApiErrorInterface {
   constructor(
     public statusCode: number,
     message: string = "Something went wrong",
-    public errors: Error[],
+    public errors: Error[] = [],
     public success: boolean = statusCode < 400,
     stack: string = ""
   ) {
