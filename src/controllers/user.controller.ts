@@ -30,7 +30,7 @@ const signInUser = asyncHandler(async (req: Request, res: Response) => {
     {
       _id: user._id,
     },
-    process.env.JWT_SECRET
+    process.env.JWT_SECRET as string
   );
   res
     .status(200)

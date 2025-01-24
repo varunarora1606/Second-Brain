@@ -1,7 +1,7 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request } from "express";
 import { asyncHandler } from "../utils/asyncHandler";
 import { ApiError } from "../utils/ApiError";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import { User } from "../models/user.model";
 
 declare global {
@@ -19,7 +19,10 @@ const verifyJWT = asyncHandler(async (req: Request, _, next: NextFunction) => {
     throw new ApiError(401, "Unauthorized user");
   }
 
-  const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+  const decodedToken = jwt.verify(
+    token,
+    process.env.JWT_SECRET as string
+  ) as JwtPayload;
 
   const user = await User.findById(decodedToken._id).select("-token -password");
 

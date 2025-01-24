@@ -12,7 +12,7 @@ const addContent = asyncHandler(async (req: Request, res: Response) => {
     title,
     tags,
     type,
-    userID: user?._id,
+    userId: user?._id,
   });
 
   res
@@ -23,7 +23,7 @@ const addContent = asyncHandler(async (req: Request, res: Response) => {
 const getAllContents = asyncHandler(async (req: Request, res: Response) => {
   const user = req.user;
 
-  const contents = await Content.find({ userID: user?._id });
+  const contents = await Content.find({ userId: user?._id });
 
   res
     .status(200)
@@ -31,9 +31,10 @@ const getAllContents = asyncHandler(async (req: Request, res: Response) => {
 });
 
 const deleteContent = asyncHandler(async (req: Request, res: Response) => {
-  const { contentID } = req.body;
+  const { contentId } = req.body;
+  const user = req.user;
 
-  const content = await Content.findByIdAndDelete(contentID);
+  const content = await Content.findByIdAndDelete({contentId, userId: user?._id});
 
   res
     .status(200)

@@ -18,7 +18,7 @@ const contentSchema = new Schema(
         ref: "Tag",
       },
     ],
-    userID: {
+    userId: {
       type: Schema.Types.ObjectId,
       ref: "User",
     },

@@ -5,7 +5,7 @@ const linkSchema = new Schema({
         type: String,
         unique: true,
     },
-    userID: {
+    userId: {
         type: Schema.Types.ObjectId,
         ref: "User"
     }
