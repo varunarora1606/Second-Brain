@@ -6,12 +6,13 @@ import { ApiResponse } from "../utils/ApiResponse";
 const addContent = asyncHandler(async (req: Request, res: Response) => {
   const user = req.user;
   const { link, title, tags, type } = req.body;
+  const lowerType = type.toLowerCase();
 
   const content = await Content.create({
     link,
     title,
     tags,
-    type,
+    type: lowerType,
     userId: user?._id,
   });
 
@@ -34,11 +35,14 @@ const deleteContent = asyncHandler(async (req: Request, res: Response) => {
   const { contentId } = req.params;
   const user = req.user;
 
-  const content = await Content.findByIdAndDelete({contentId, userId: user?._id});
+  const content = await Content.findOneAndDelete({
+    _id: contentId,
+    userId: user?._id,
+  });
 
   res
     .status(200)
     .json(new ApiResponse(200, content, "Content deleted successfully"));
 });
 
-export {addContent, getAllContents, deleteContent}
+export { addContent, getAllContents, deleteContent };

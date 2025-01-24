@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
+import { dbName } from "../contants";
 
-const DbConnect = async () => {
+const dbConnect = async () => {
   try {
-    await mongoose.connect(`${process.env.MONGODB_URI}/second-brain`);
+    await mongoose.connect(`${process.env.MONGODB_URI}/${dbName}`);
     console.log("Connected to MongoDB");
   } catch (error) {
     console.log("Failed to connect to MongoDB \nError: " + error);
@@ -10,4 +11,4 @@ const DbConnect = async () => {
   }
 };
 
-export { DbConnect };
+export { dbConnect };

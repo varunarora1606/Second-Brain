@@ -1,12 +1,12 @@
 import dotenv from "dotenv";
-import { DbConnect } from "./db/mongodb";
+import { dbConnect } from "./db/mongodb";
 import { app } from "./app";
 
 dotenv.config({
-    path: "./env"
+    path: "./.env"
 })
 
-DbConnect()
+dbConnect()
 .then(() => {
     app.on("error", (err) => {
         console.log("Error: ", err);
