@@ -31,7 +31,7 @@ const getAllContents = asyncHandler(async (req: Request, res: Response) => {
 });
 
 const deleteContent = asyncHandler(async (req: Request, res: Response) => {
-  const { contentId } = req.body;
+  const { contentId } = req.params;
   const user = req.user;
 
   const content = await Content.findByIdAndDelete({contentId, userId: user?._id});

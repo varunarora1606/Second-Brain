@@ -31,7 +31,7 @@ const createShareBrainLink = asyncHandler(async (req, res) => {
 });
 
 const getUserBrain = asyncHandler(async (req, res) => {
-  const { hash } = req.body;
+  const { hash } = req.params;
 
   const link = await Link.findOne({ hash });
 
