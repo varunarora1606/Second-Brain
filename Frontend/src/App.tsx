@@ -1,12 +1,11 @@
-function App() {
+import BrainPage from "./pages/BrainPage";
 
+function App() {
   return (
-    <>
-    <div className="bg-black text-white">
-      Hello
-    </div>
-    </>
-  )
+    <BrainPage />
+    // <SideBar />
+  );
 }
 
-export default App
+export default App;
+

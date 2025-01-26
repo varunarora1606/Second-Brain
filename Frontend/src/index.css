@@ -1,1 +1,16 @@
 @import "tailwindcss";
+
+@theme {
+    --color-blue-1: #E0E7FF;
+    --color-blue-2: #5046E3;
+    --color-blue-3: #F1F1FA;
+    --color-blue-4: #9594DA;
+    --color-gray-1: #BBBBBB;
+    --color-gray-2: #999999;
+    --color-gray-3: #555555;
+    --color-gray-4: #F9FBFC;
+
+    --font-poppins: "poppins";
+
+    --spacing: 2px
+}
