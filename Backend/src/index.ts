@@ -1,10 +1,10 @@
 import dotenv from "dotenv";
-import { dbConnect } from "./db/mongodb";
-import { app } from "./app";
-
 dotenv.config({
     path: "./.env"
 })
+import { dbConnect } from "./db/mongodb";
+import { app } from "./app";
+
 
 dbConnect()
 .then(() => {
