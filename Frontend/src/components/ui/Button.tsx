@@ -39,9 +39,9 @@ const Button = ({
         loading && loadingStyle
       }`}
     >
-      {loading ? null : startIcon ? <span>{startIcon}</span> : null}
+      {loading ? null : startIcon ? <span className="size-9">{startIcon}</span> : null}
       {loading ? "Loading..." : text}
-      {loading ? null : (endIcon ? <span>{endIcon}</span> : null)}
+      {loading ? null : (endIcon ? <span className="size-9">{endIcon}</span> : null)}
     </button>
   );
 };

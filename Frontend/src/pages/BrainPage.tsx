@@ -1,4 +1,4 @@
-import SideBar from "../components/SideBar";
+import SideBar from "../components/NavBar";
 import BrainSpace from "../components/BrainSpace";
 
 function BrainPage() {
