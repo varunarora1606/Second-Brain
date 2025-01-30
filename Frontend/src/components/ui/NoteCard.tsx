@@ -7,6 +7,9 @@ import Trash from "../icons/Trash";
 import Twitter from "../icons/Twitter";
 import Youtube from "../icons/Youtube";
 import axios from "axios";
+import { useSetRecoilState } from "recoil";
+import { IMemory, memoryState } from "../../store/memoryState";
+import { memo } from "react";
 
 type Type = "document" | "youtube" | "twitter" | "google" | "instagram";
 
@@ -27,13 +30,20 @@ const typeIcons = {
   instagram: <Instagram />,
 };
 
-function NoteCard({_id, description, link, title, tags, timeStamp }: Props) {
+const NoteCard = memo(function NoteCard({
+  _id,
+  description,
+  link,
+  title,
+  tags,
+  timeStamp,
+}: Props) {
+  const setMemory = useSetRecoilState(memoryState);
   let type: Type;
   let last: string = "";
   if (link) {
     const site = link.split("/")[2];
     last = link.split("/").pop() || "";
-    console.log(last);
     switch (site) {
       case "youtu.be":
         type = "youtube";
@@ -56,12 +66,14 @@ function NoteCard({_id, description, link, title, tags, timeStamp }: Props) {
   }
 
   const handleDelete = async () => {
-    const response = await axios.delete(`/api/v1/content/delete/${_id}`)
-    console.log(response)
-  }
+    const response = await axios.delete(`/api/v1/content/delete/${_id}`);
+    setMemory((prev: IMemory[]) =>
+      prev.filter((temp: IMemory) => temp._id != _id)
+    );
+  };
 
   return (
-    <div className="w-full p-7.5 border border-gray-2 rounded-xl bg-white">
+    <div className="w-full p-7.5 border border-gray-200 rounded-xl bg-white">
       <div className="flex items-start justify-between">
         <div className="flex mt-1 items-center">
           <span className="size-10 text-gray-2 mr-4">{typeIcons[type]}</span>
@@ -71,7 +83,10 @@ function NoteCard({_id, description, link, title, tags, timeStamp }: Props) {
           <button className="text-gray-1 hover:text-gray-3 size-7 cursor-pointer">
             <Share />
           </button>
-          <button className="text-gray-1 hover:text-gray-3 size-7 cursor-pointer" onClick={handleDelete}>
+          <button
+            className="text-gray-1 hover:text-gray-3 size-7 cursor-pointer"
+            onClick={handleDelete}
+          >
             <Trash />
           </button>
         </div>
@@ -117,6 +132,6 @@ function NoteCard({_id, description, link, title, tags, timeStamp }: Props) {
       </div>
     </div>
   );
-}
+});
 
 export default NoteCard;

@@ -1,11 +1,12 @@
+import { RecoilRoot } from "recoil";
 import BrainPage from "./pages/BrainPage";
 
 function App() {
   return (
-    <BrainPage />
-    // <SideBar />
+    <RecoilRoot>
+      <BrainPage />
+    </RecoilRoot>
   );
 }
 
 export default App;
-

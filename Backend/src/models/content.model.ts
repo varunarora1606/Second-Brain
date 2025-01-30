@@ -2,15 +2,18 @@ import { model, Schema } from "mongoose";
 
 const contentSchema = new Schema(
   {
-    link: {
+    title: {
       type: String,
     },
-    title: {
+    link: {
       type: String,
     },
     type: {
       type: String,
-      required: true,
+      // required: true,
+    },
+    description: {
+      type: String,
     },
     tags: [
       {

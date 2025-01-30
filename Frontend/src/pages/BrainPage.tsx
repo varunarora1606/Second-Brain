@@ -1,11 +1,13 @@
-import SideBar from "../components/NavBar";
 import BrainSpace from "../components/BrainSpace";
+import NavBar from "../components/NavBar";
+import ModalPage from "./ModalPage";
 
 function BrainPage() {
   return (
     <>
-      <SideBar />
+      <NavBar />
       <BrainSpace />
+      <ModalPage />
     </>
   );
 }
