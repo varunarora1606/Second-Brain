@@ -2,7 +2,6 @@ import { Tweet } from "react-tweet";
 import Document from "../icons/Document";
 import Google from "../icons/Google";
 import Instagram from "../icons/Instagram";
-import Share from "../icons/Share";
 import Trash from "../icons/Trash";
 import Twitter from "../icons/Twitter";
 import Youtube from "../icons/Youtube";
@@ -10,6 +9,8 @@ import axios from "axios";
 import { useSetRecoilState } from "recoil";
 import { IMemory, memoryState } from "../../store/memoryState";
 import { memo } from "react";
+import Link from "../icons/Link";
+import { useNavigate } from "react-router-dom";
 
 type Type = "document" | "youtube" | "twitter" | "google" | "instagram";
 
@@ -38,6 +39,7 @@ const NoteCard = memo(function NoteCard({
   tags,
   timeStamp,
 }: Props) {
+  const navigate = useNavigate()
   const setMemory = useSetRecoilState(memoryState);
   let type: Type;
   let last: string = "";
@@ -65,6 +67,11 @@ const NoteCard = memo(function NoteCard({
     type = "document";
   }
 
+  const handleCopy = async () => {
+    if (!link) return;
+    await navigator.clipboard.writeText(link);
+  };
+
   const handleDelete = async () => {
     const response = await axios.delete(`/api/v1/content/delete/${_id}`);
     setMemory((prev: IMemory[]) =>
@@ -75,13 +82,22 @@ const NoteCard = memo(function NoteCard({
   return (
     <div className="w-full p-7.5 border border-gray-200 rounded-xl bg-white">
       <div className="flex items-start justify-between">
-        <div className="flex mt-1 items-center">
-          <span className="size-10 text-gray-2 mr-4">{typeIcons[type]}</span>
+        <div className="flex items-center">
+          <a
+            href={link}
+            target="_blank"
+            className="size-10 text-gray-2 hover:text-gray-3 cursor-pointer mr-4"
+          >
+            {typeIcons[type]}
+          </a>
         </div>
         <p className="font-bold text-gray-3 whitespace-wrap text-sm">{title}</p>
         <div className="flex mt-1 items-center gap-5">
-          <button className="text-gray-1 hover:text-gray-3 size-7 cursor-pointer">
-            <Share />
+          <button
+            className="text-gray-1 hover:text-gray-3 size-7 cursor-pointer"
+            onClick={handleCopy}
+          >
+            <Link />
           </button>
           <button
             className="text-gray-1 hover:text-gray-3 size-7 cursor-pointer"

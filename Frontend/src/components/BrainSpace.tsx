@@ -17,7 +17,6 @@ function BrainSpace() {
   return (
     <div className="bg-gray-4 pl-15 pr-11 py-8 h-full min-h-screen">
       <Masonry columns={{ xs: 1, sm: 2, md: 3, lg: 4 }} spacing={2}>
-        {console.log(contents)}
         {contents.map((content: Content) => (
           <div key={content._id}>
             <NoteCard

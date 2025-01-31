@@ -1,4 +1,20 @@
+import { useRef } from "react";
+import LoginUser from "../components/icons/LoginUser";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
 function LoginPage() {
+  const navigate = useNavigate();
+  const usernameRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+  const handleSubmit = async () => {
+    const response = await axios.post("/api/v1/user/signin", {
+      username: usernameRef.current?.value,
+      password: passwordRef.current?.value,
+    });
+    if (response.status === 403) console.log("Wrong password or username");
+    navigate("/");
+  };
   return (
     <div className="min-h-screen bg-gray-4 text-gray-900 flex justify-center">
       <div className="max-w-screen-xl bg-gray-4 flex justify-center flex-1 items-center">
@@ -46,42 +62,34 @@ function LoginPage() {
 
               <div className="my-12 border-b text-center">
                 <div className="leading-none px-4 inline-block text-sm text-gray-600 tracking-wide font-medium bg-white transform translate-y-3/5">
-                  Or login with e-mail
+                  Or login with username
                 </div>
               </div>
 
               <div className="mx-auto max-w-xs">
                 <input
+                  ref={usernameRef}
                   className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
-                  type="email"
-                  placeholder="Email"
+                  placeholder="Username"
                 />
                 <input
+                  ref={passwordRef}
                   className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-7.5"
                   type="password"
                   placeholder="Password"
                 />
-                <button className="mt-7.5 cursor-pointer tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
-                  <svg
-                    className="w-12 h-12 -ml-4"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" />
-                    <circle cx="8.5" cy="7" r="4" />
-                    <path d="M20 8v6M23 11h-6" />
-                  </svg>
+                <button
+                  onClick={handleSubmit}
+                  className="mt-7.5 cursor-pointer tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
+                >
+                  <span className="w-12 h-12 -ml-4">
+                    <LoginUser />
+                  </span>
                   <span className="ml-3">Login</span>
                 </button>
                 <p className="mt-9 text-xs text-gray-600 text-center">
-                  Don't have an account: 
-                  <a
-                    href="#"
-                    className="hover:border-b-2 font-bold ml-3"
-                  >
+                  Don't have an account:
+                  <a href="/signup" className="hover:border-b-2 font-bold ml-3">
                     Create a new account
                   </a>
                 </p>

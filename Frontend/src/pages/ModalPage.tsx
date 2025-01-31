@@ -19,10 +19,6 @@ function ModalPage() {
   const setMemory = useSetRecoilState(memoryState);
   const [open, setOpen] = useRecoilState(modalOpenState);
 
-  useEffect(() => {
-    console.log("useefect wala", titleRef);
-  }, []);
-
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!titleRef.current?.value && !urlRef.current?.value) {
@@ -33,7 +29,6 @@ function ModalPage() {
       title: titleRef.current?.value,
       link: urlRef.current?.value,
     });
-    // console.log(content);
     setMemory((prev: IMemory[]) => [...prev, content.data.data]);
     setOpen(false);
   };
@@ -44,7 +39,7 @@ function ModalPage() {
         <DialogTitle className="pb-2">Create new Memory</DialogTitle>
         <form onSubmit={handleSubmit}>
           <Stack spacing={2}>
-            <input type="text" ref={titleRef} placeholder="Title" />
+            <input type="text" autoFocus ref={titleRef} placeholder="Title" />
             <input type="text" placeholder="Description" disabled />
             <input type="text" ref={urlRef} placeholder="Url" />
             <Button type="submit">Submit</Button>

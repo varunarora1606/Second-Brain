@@ -16,9 +16,7 @@ export const memoryState = atom({
   default: selector({
     key: "UserInfo/Default",
     get: async () => {
-      console.log("hello");
       const response = await axios.get("/api/v1/content/get");
-      console.log(response.data.data);
       return response.data.data;
     },
   }),
