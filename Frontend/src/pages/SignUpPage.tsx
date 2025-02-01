@@ -1,7 +1,38 @@
-// import { useParams } from "react-router-dom";
+import axios from "axios";
+import { KeyboardEvent, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 
 function SignUpPage() {
-  // const { hash } = useParams();
+  const navigate = useNavigate();
+  useEffect(() => {
+    const fn = async () => {
+      const response = await axios.get("/api/v1/user/auth-check");
+      if (response.data.statusCode == 200) navigate("/");
+    };
+    fn();
+  }, []);
+  const usernameRef = useRef<HTMLInputElement>(null);
+  const passwordRef = useRef<HTMLInputElement>(null);
+
+  const handleUsernameEnter = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      passwordRef.current?.focus();
+    }
+  };
+  const handlePasswordEnter = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSubmit();
+    }
+  };
+
+  const handleSubmit = async () => {
+    const response = await axios.post("/api/v1/user/signup", {
+      username: usernameRef.current?.value,
+      password: passwordRef.current?.value,
+    });
+    if (response.status === 400) console.log("User already exist");
+    navigate("/");
+  };
   return (
     <div className="min-h-screen bg-gray-4 text-gray-900 flex justify-center">
       <div className="max-w-screen-xl bg-gray-4 flex justify-center flex-1 items-center">
@@ -49,20 +80,25 @@ function SignUpPage() {
 
               <div className="my-12 border-b text-center">
                 <div className="leading-none px-4 inline-block text-sm text-gray-600 tracking-wide font-medium bg-white transform translate-y-3/5">
-                  Or sign Up with e-mail
+                  Or sign Up with username
                 </div>
               </div>
 
               <div className="mx-auto max-w-xs">
                 <input
+                  ref={usernameRef}
+                  autoFocus
                   className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
-                  type="email"
-                  placeholder="Email"
+                  type="text"
+                  placeholder="username"
+                  onKeyUp={handleUsernameEnter}
                 />
                 <input
+                  ref={passwordRef}
                   className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-7.5"
                   type="password"
                   placeholder="Password"
+                  onKeyUp={handlePasswordEnter}
                 />
                 <button className="mt-7.5 cursor-pointer tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
                   <svg
@@ -81,9 +117,12 @@ function SignUpPage() {
                 </button>
                 <p className="mt-9 text-xs text-gray-600 text-center">
                   Already have an account:
-                  <a href="/login" className="hover:border-b-2 font-bold ml-3">
+                  <button
+                    onClick={() => navigate("/login")}
+                    className="hover:border-b-2 font-bold ml-3 cursor-pointer"
+                  >
                     Login
-                  </a>
+                  </button>
                 </p>
               </div>
             </div>

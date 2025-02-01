@@ -39,7 +39,7 @@ const getUserBrain = asyncHandler(async (req, res) => {
     throw new ApiError(400, "Invalid link");
   }
 
-  const content = await Content.find({ userId: link.userId });
+  const content = await Content.find({ userId: link.userId }).sort({updatedAt: -1});
 
   const user = await User.findById(link.userId);
 

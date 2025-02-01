@@ -1,12 +1,33 @@
-import { useRef } from "react";
+import { KeyboardEvent, useEffect, useRef } from "react";
 import LoginUser from "../components/icons/LoginUser";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import useCookie from "../hooks/useCookie";
 
 function LoginPage() {
+  useEffect(() => {
+    const fn = async() => {
+      const response = await axios.get("/api/v1/user/auth-check")
+      if(response.data.statusCode == 200) navigate("/")
+    }
+    fn()
+  }, [])
   const navigate = useNavigate();
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
+
+  const handleUsernameEnter = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      console.log(document.cookie);
+      passwordRef.current?.focus();
+    }
+  };
+  const handlePasswordEnter = (e: KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleSubmit();
+    }
+  };
+
   const handleSubmit = async () => {
     const response = await axios.post("/api/v1/user/signin", {
       username: usernameRef.current?.value,
@@ -51,7 +72,7 @@ function LoginPage() {
                   <div className="bg-white p-1 rounded-full">
                     <svg className="w-12" viewBox="0 0 32 32">
                       <path
-                        fill-rule="evenodd"
+                        fillRule="evenodd"
                         d="M16 4C9.371 4 4 9.371 4 16c0 5.3 3.438 9.8 8.207 11.387.602.11.82-.258.82-.578 0-.286-.011-1.04-.015-2.04-3.34.723-4.043-1.609-4.043-1.609-.547-1.387-1.332-1.758-1.332-1.758-1.09-.742.082-.726.082-.726 1.203.086 1.836 1.234 1.836 1.234 1.07 1.836 2.808 1.305 3.492 1 .11-.777.422-1.305.762-1.605-2.664-.301-5.465-1.332-5.465-5.93 0-1.313.469-2.383 1.234-3.223-.121-.3-.535-1.523.117-3.175 0 0 1.008-.32 3.301 1.23A11.487 11.487 0 0116 9.805c1.02.004 2.047.136 3.004.402 2.293-1.55 3.297-1.23 3.297-1.23.656 1.652.246 2.875.12 3.175.77.84 1.231 1.91 1.231 3.223 0 4.61-2.804 5.621-5.476 5.922.43.367.812 1.101.812 2.219 0 1.605-.011 2.898-.011 3.293 0 .32.214.695.824.578C24.566 25.797 28 21.3 28 16c0-6.629-5.371-12-12-12z"
                       />
                     </svg>
@@ -68,12 +89,16 @@ function LoginPage() {
 
               <div className="mx-auto max-w-xs">
                 <input
+                  autoFocus
                   ref={usernameRef}
+                  onKeyUp={handleUsernameEnter}
+                  type="text"
                   className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
                   placeholder="Username"
                 />
                 <input
                   ref={passwordRef}
+                  onKeyUp={handlePasswordEnter}
                   className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-7.5"
                   type="password"
                   placeholder="Password"
@@ -89,9 +114,12 @@ function LoginPage() {
                 </button>
                 <p className="mt-9 text-xs text-gray-600 text-center">
                   Don't have an account:
-                  <a href="/signup" className="hover:border-b-2 font-bold ml-3">
+                  <button
+                    onClick={() => navigate("/signup")}
+                    className="hover:border-b-2 font-bold ml-3 cursor-pointer"
+                  >
                     Create a new account
-                  </a>
+                  </button>
                 </p>
               </div>
             </div>

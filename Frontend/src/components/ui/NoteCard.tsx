@@ -9,8 +9,7 @@ import axios from "axios";
 import { useSetRecoilState } from "recoil";
 import { IMemory, memoryState } from "../../store/memoryState";
 import { memo } from "react";
-import Link from "../icons/Link";
-import { useNavigate } from "react-router-dom";
+import CopyLink from "./CopyLink";
 
 type Type = "document" | "youtube" | "twitter" | "google" | "instagram";
 
@@ -21,6 +20,7 @@ interface Props {
   title?: string;
   tags?: string[];
   timeStamp?: string;
+  sharedBrain?: boolean;
 }
 
 const typeIcons = {
@@ -38,8 +38,8 @@ const NoteCard = memo(function NoteCard({
   title,
   tags,
   timeStamp,
+  sharedBrain = false
 }: Props) {
-  const navigate = useNavigate()
   const setMemory = useSetRecoilState(memoryState);
   let type: Type;
   let last: string = "";
@@ -67,11 +67,6 @@ const NoteCard = memo(function NoteCard({
     type = "document";
   }
 
-  const handleCopy = async () => {
-    if (!link) return;
-    await navigator.clipboard.writeText(link);
-  };
-
   const handleDelete = async () => {
     const response = await axios.delete(`/api/v1/content/delete/${_id}`);
     setMemory((prev: IMemory[]) =>
@@ -81,7 +76,7 @@ const NoteCard = memo(function NoteCard({
 
   return (
     <div className="w-full p-7.5 border border-gray-200 rounded-xl bg-white">
-      <div className="flex items-start justify-between">
+      <div className="flex items-start justify-between border-b pb-4">
         <div className="flex items-center">
           <a
             href={link}
@@ -91,30 +86,23 @@ const NoteCard = memo(function NoteCard({
             {typeIcons[type]}
           </a>
         </div>
-        <p className="font-bold text-gray-3 whitespace-wrap text-sm">{title}</p>
+        <p className="font-bold text-gray-3 whitespace-wrap text-[15px]">{title}</p>
         <div className="flex mt-1 items-center gap-5">
-          <button
-            className="text-gray-1 hover:text-gray-3 size-7 cursor-pointer"
-            onClick={handleCopy}
-          >
-            <Link />
-          </button>
-          <button
+          <CopyLink link={link}/>
+          {!sharedBrain && <button
             className="text-gray-1 hover:text-gray-3 size-7 cursor-pointer"
             onClick={handleDelete}
           >
             <Trash />
-          </button>
+          </button>}
         </div>
       </div>
 
-      <div className="my-4 text-[16px] flex flex-col gap-5">
+      <div className={`text-lg flex flex-col ${type != "twitter" ? description ? "my-4 gap-5" : "mt-8 mb-5 gap-5":  description ? "mt-4" : null}`}>
         {description}
         {type == "youtube" && (
           <iframe
-            className="rounded-2xl"
-            width="100%"
-            height="100%"
+            className="rounded-2xl aspect-video"
             src={link?.replace("youtu.be", "youtube.com/embed")}
             title="YouTube video player"
             frameBorder="0"

@@ -3,6 +3,7 @@ import BrainPage from "./pages/BrainPage";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
+import SharedBrainPage from "./pages/SharedBrainPage";
 
 function App() {
   return (
@@ -12,7 +13,7 @@ function App() {
           <Route path="/" element={<BrainPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignUpPage />} />
-          {/* <Route path="/brain/:hash" element={<SignUpPage />} /> */}
+          <Route path="/brain/:hash" element={<SharedBrainPage />} />
         </Routes>
       </BrowserRouter>
     </RecoilRoot>

@@ -9,7 +9,7 @@ interface Props {
   endIcon?: ReactElement;
   widthFull?: boolean;
   style?: string;
-  onClick?: () => void;
+  onClick?: any
 }
 
 const buttonVariants = {

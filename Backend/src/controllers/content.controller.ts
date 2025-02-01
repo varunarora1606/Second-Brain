@@ -5,7 +5,7 @@ import { ApiResponse } from "../utils/ApiResponse";
 
 const addContent = asyncHandler(async (req: Request, res: Response) => {
   const user = req.user;
-  const { link, title, tags, type } = req.body;
+  const { link, title, tags, type, description } = req.body;
   const lowerType = type?.toLowerCase();
 
   const content = await Content.create({
@@ -14,6 +14,7 @@ const addContent = asyncHandler(async (req: Request, res: Response) => {
     tags,
     type: lowerType,
     userId: user?._id,
+    description
   });
 
   res
@@ -24,7 +25,7 @@ const addContent = asyncHandler(async (req: Request, res: Response) => {
 const getAllContents = asyncHandler(async (req: Request, res: Response) => {
   const user = req.user;
 
-  const contents = await Content.find({ userId: user?._id });
+  const contents = await Content.find({ userId: user?._id }).sort({createdAt: -1});
 
   res
     .status(200)

@@ -16,9 +16,16 @@ const signUpUser = asyncHandler(async (req: Request, res: Response) => {
   const usernameLower = username.toLowerCase();
   const user = await User.create({ username: usernameLower, password });
   user.password = "";
+  const token = jwt.sign(
+    {
+      _id: user._id,
+    },
+    process.env.JWT_SECRET as string
+  );
   res
     .status(200)
-    .json(new ApiResponse(200, user, "User account created successfully"));
+    .cookie("token", token, options)
+    .json(new ApiResponse(200, {user}, "User account created successfully"));
 });
 
 const signInUser = asyncHandler(async (req: Request, res: Response) => {
@@ -29,6 +36,7 @@ const signInUser = asyncHandler(async (req: Request, res: Response) => {
   if (!user) {
     throw new ApiError(403, "Wrong email or password");
   }
+  user.password = "";
   const token = jwt.sign(
     {
       _id: user._id,
@@ -48,4 +56,8 @@ const logOutUser = asyncHandler(async (req: Request, res: Response) => {
     .json(new ApiResponse(200, {}, "User logged out successfully"));
 });
 
-export { signUpUser, signInUser, logOutUser };
+const authCheck = asyncHandler(async (req: Request, res: Response) => {
+  res.status(200).json(new ApiResponse(200, {}, "User is already logged in"))
+})
+
+export { signUpUser, signInUser, logOutUser, authCheck };

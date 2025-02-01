@@ -1,5 +1,4 @@
-import axios from "axios";
-import { atom, selector } from "recoil";
+import { atom } from "recoil";
 
 // export const memoryState = selector({
 //   key: "memoryState",
@@ -13,13 +12,7 @@ import { atom, selector } from "recoil";
 
 export const memoryState = atom({
   key: "UserInfo",
-  default: selector({
-    key: "UserInfo/Default",
-    get: async () => {
-      const response = await axios.get("/api/v1/content/get");
-      return response.data.data;
-    },
-  }),
+  default: [] as IMemory[],
 });
 
 export interface IMemory {
@@ -28,6 +21,6 @@ export interface IMemory {
   link?: string;
   title?: string;
   tags?: string[];
-  timeStamp?: string;
+  createdAt?: string;
   type?: string;
 }
