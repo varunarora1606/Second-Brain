@@ -2,7 +2,6 @@ import { KeyboardEvent, useEffect, useRef } from "react";
 import LoginUser from "../components/icons/LoginUser";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import useCookie from "../hooks/useCookie";
 
 function LoginPage() {
   useEffect(() => {

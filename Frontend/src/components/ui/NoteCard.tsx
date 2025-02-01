@@ -38,7 +38,7 @@ const NoteCard = memo(function NoteCard({
   title,
   tags,
   timeStamp,
-  sharedBrain = false
+  sharedBrain = false,
 }: Props) {
   const setMemory = useSetRecoilState(memoryState);
   let type: Type;
@@ -69,9 +69,11 @@ const NoteCard = memo(function NoteCard({
 
   const handleDelete = async () => {
     const response = await axios.delete(`/api/v1/content/delete/${_id}`);
-    setMemory((prev: IMemory[]) =>
-      prev.filter((temp: IMemory) => temp._id != _id)
-    );
+    if (response.data.statusCode === 200) {
+      setMemory((prev: IMemory[]) =>
+        prev.filter((temp: IMemory) => temp._id != _id)
+      );
+    }
   };
 
   return (
@@ -86,19 +88,33 @@ const NoteCard = memo(function NoteCard({
             {typeIcons[type]}
           </a>
         </div>
-        <p className="font-bold text-gray-3 whitespace-wrap text-[15px]">{title}</p>
+        <p className="font-bold text-gray-3 whitespace-wrap text-[15px]">
+          {title}
+        </p>
         <div className="flex mt-1 items-center gap-5">
-          <CopyLink link={link}/>
-          {!sharedBrain && <button
-            className="text-gray-1 hover:text-gray-3 size-7 cursor-pointer"
-            onClick={handleDelete}
-          >
-            <Trash />
-          </button>}
+          <CopyLink link={link} />
+          {!sharedBrain && (
+            <button
+              className="text-gray-1 hover:text-gray-3 size-7 cursor-pointer"
+              onClick={handleDelete}
+            >
+              <Trash />
+            </button>
+          )}
         </div>
       </div>
 
-      <div className={`text-lg flex flex-col ${type != "twitter" ? description ? "my-4 gap-5" : "mt-8 mb-5 gap-5":  description ? "mt-4" : null}`}>
+      <div
+        className={`text-lg flex flex-col ${
+          type != "twitter"
+            ? description
+              ? "my-4 gap-5"
+              : "mt-8 mb-5 gap-5"
+            : description
+            ? "mt-4"
+            : null
+        }`}
+      >
         {description}
         {type == "youtube" && (
           <iframe

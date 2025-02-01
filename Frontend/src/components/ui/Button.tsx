@@ -2,7 +2,6 @@ import { ReactElement } from "react";
 
 interface Props {
   variant?: "primary" | "secondary";
-  //   size: string;
   text: string;
   loading?: boolean;
   startIcon?: ReactElement;
