@@ -1,11 +1,14 @@
-import NoteCard from "./ui/NoteCard";
+import NoteCard from "./NoteCard";
 import { Masonry } from "@mui/lab";
-import { useRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { IMemory, memoryState } from "../store/memoryState";
 import { createTheme, ThemeProvider } from "@mui/material";
 import { useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { filteredMemorySelector } from "../store/filteredMemorySelector";
+
+import BrainNavbar from "./BrainNavbar";
 
 const theme = createTheme({
   breakpoints: {
@@ -21,8 +24,9 @@ const theme = createTheme({
 
 function BrainSpace({ sharedBrain = false }: { sharedBrain?: boolean }) {
   const { hash } = useParams();
-  const [contents, setContents] = useRecoilState(memoryState);
+  const contents = useRecoilValue(filteredMemorySelector);
 
+  const setContents = useSetRecoilState(memoryState);
   useEffect(() => {
     const fn = async () => {
       if (!sharedBrain) {
@@ -31,19 +35,22 @@ function BrainSpace({ sharedBrain = false }: { sharedBrain?: boolean }) {
         return;
       }
       const response = await axios.get(`/api/v1/brain/get/${hash}`);
-      console.log(response.data.data.content)
+      console.log(response.data.data.content);
       setContents(response.data.data.content);
     };
     fn();
-
   }, []);
 
   return (
     <ThemeProvider theme={theme}>
-      <div className="bg-gray-4 pl-11 pr-7 py-8 h-full min-h-screen">
+      <div className="bg-gray-4 pl-11 pr-7 py-8 w-full h-full min-h-screen">
+        <BrainNavbar />
         <Masonry columns={{ xs: 1, sm: 2, md: 3, lg: 4, xl: 5 }} spacing={2}>
           {contents.map((content: IMemory) => (
-            <div key={content._id}>
+            <div
+              key={content._id}
+              className={`${content.hidden ? "hidden" : ""}`}
+            >
               <NoteCard
                 _id={content._id}
                 link={content.link}
@@ -51,6 +58,7 @@ function BrainSpace({ sharedBrain = false }: { sharedBrain?: boolean }) {
                 description={content.description}
                 tags={content.tags}
                 timeStamp={content.createdAt}
+                type={content.type}
                 sharedBrain={sharedBrain}
               />
             </div>

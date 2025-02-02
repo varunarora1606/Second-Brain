@@ -5,8 +5,31 @@ import { ApiResponse } from "../utils/ApiResponse";
 
 const addContent = asyncHandler(async (req: Request, res: Response) => {
   const user = req.user;
-  const { link, title, tags, type, description } = req.body;
-  const lowerType = type?.toLowerCase();
+  const { link, title, tags, description } = req.body;
+  let type: string;
+  if (link) {
+    const site = link.split("/")[2];
+    switch (site) {
+      case "youtu.be":
+        type = "youtube";
+        break;
+      case "x.com":
+        type = "twitter";
+        break;
+      case "google.com":
+        type = "google";
+        break;
+      case "instagram.com":
+        type = "instagram";
+        break;
+      default:
+        type = "document";
+        break;
+    }
+  } else {
+    type = "document";
+  }
+  const lowerType = type.toLowerCase();
 
   const content = await Content.create({
     link,
@@ -14,7 +37,7 @@ const addContent = asyncHandler(async (req: Request, res: Response) => {
     tags,
     type: lowerType,
     userId: user?._id,
-    description
+    description,
   });
 
   res
@@ -25,7 +48,9 @@ const addContent = asyncHandler(async (req: Request, res: Response) => {
 const getAllContents = asyncHandler(async (req: Request, res: Response) => {
   const user = req.user;
 
-  const contents = await Content.find({ userId: user?._id }).sort({createdAt: -1});
+  const contents = await Content.find({ userId: user?._id }).sort({
+    createdAt: -1,
+  });
 
   res
     .status(200)

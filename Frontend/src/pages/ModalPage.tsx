@@ -26,7 +26,8 @@ function ModalPage() {
   const handleEnter = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key == "Enter" && e.currentTarget.value) {
       if (tags.includes(e.currentTarget.value.toLowerCase().trim())) return;
-      setTags((prev) => [e.currentTarget.value.toLowerCase().trim(), ...prev]);
+      const newTag = e.currentTarget.value.toLowerCase().trim()
+      setTags((prev) => [newTag, ...prev]);
       e.currentTarget.value = "";
     }
   };

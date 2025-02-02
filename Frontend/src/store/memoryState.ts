@@ -1,7 +1,7 @@
 import { atom } from "recoil";
 
 export const memoryState = atom({
-  key: "UserInfo",
+  key: "memory",
   default: [] as IMemory[],
 });
 
@@ -12,5 +12,6 @@ export interface IMemory {
   title?: string;
   tags?: string[];
   createdAt?: string;
-  type?: string;
+  type: "document" | "youtube" | "twitter" | "google" | "instagram";
+  hidden?: boolean;
 }

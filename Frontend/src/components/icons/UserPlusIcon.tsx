@@ -1,4 +1,4 @@
-function LoginUser() {
+function UserPlusIcon() {
   return (
     <svg
       fill="none"
@@ -14,4 +14,4 @@ function LoginUser() {
   );
 }
 
-export default LoginUser;
+export default UserPlusIcon;

@@ -1,17 +1,16 @@
-import { Tweet } from "react-tweet";
-import Document from "../icons/Document";
-import Google from "../icons/Google";
-import Instagram from "../icons/Instagram";
-import Trash from "../icons/Trash";
-import Twitter from "../icons/Twitter";
-import Youtube from "../icons/Youtube";
+import Document from "./icons/Document";
+import Google from "./icons/Google";
+import Instagram from "./icons/Instagram";
+import Trash from "./icons/Trash";
+import Twitter from "./icons/Twitter";
+import Youtube from "./icons/Youtube";
 import axios from "axios";
 import { useSetRecoilState } from "recoil";
-import { IMemory, memoryState } from "../../store/memoryState";
+import { IMemory, memoryState } from "../store/memoryState";
 import { memo } from "react";
-import CopyLink from "./CopyLink";
-
-type Type = "document" | "youtube" | "twitter" | "google" | "instagram";
+import CopyLink from "./ui/CopyLink";
+import Embed from "./ui/Embed";
+import { tagFilterState } from "../store/tagFilterState";
 
 interface Props {
   _id: string;
@@ -21,6 +20,7 @@ interface Props {
   tags?: string[];
   timeStamp?: string;
   sharedBrain?: boolean;
+  type: "document" | "youtube" | "twitter" | "google" | "instagram";
 }
 
 const typeIcons = {
@@ -39,33 +39,34 @@ const NoteCard = memo(function NoteCard({
   tags,
   timeStamp,
   sharedBrain = false,
+  type
 }: Props) {
   const setMemory = useSetRecoilState(memoryState);
-  let type: Type;
-  let last: string = "";
-  if (link) {
-    const site = link.split("/")[2];
-    last = link.split("/").pop() || "";
-    switch (site) {
-      case "youtu.be":
-        type = "youtube";
-        break;
-      case "x.com":
-        type = "twitter";
-        break;
-      case "google.com":
-        type = "google";
-        break;
-      case "instagram.com":
-        type = "instagram";
-        break;
-      default:
-        type = "document";
-        break;
-    }
-  } else {
-    type = "document";
-  }
+  const setTagFilter = useSetRecoilState(tagFilterState);
+
+  // let type: Type;
+  // if (link) {
+  //   const site = link.split("/")[2];
+  //   switch (site) {
+  //     case "youtu.be":
+  //       type = "youtube";
+  //       break;
+  //     case "x.com":
+  //       type = "twitter";
+  //       break;
+  //     case "google.com":
+  //       type = "google";
+  //       break;
+  //     case "instagram.com":
+  //       type = "instagram";
+  //       break;
+  //     default:
+  //       type = "document";
+  //       break;
+  //   }
+  // } else {
+  //   type = "document";
+  // }
 
   const handleDelete = async () => {
     const response = await axios.delete(`/api/v1/content/delete/${_id}`);
@@ -116,32 +117,18 @@ const NoteCard = memo(function NoteCard({
         }`}
       >
         {description}
-        {type == "youtube" && (
-          <iframe
-            className="rounded-2xl aspect-video"
-            src={link?.replace("youtu.be", "youtube.com/embed")}
-            title="YouTube video player"
-            frameBorder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; web-share"
-            referrerPolicy="strict-origin-when-cross-origin"
-            allowFullScreen
-          ></iframe>
-        )}
-        {type == "twitter" && (
-          <div className="light">
-            <Tweet id={last} />
-          </div>
-        )}
+        {link && <Embed type={type} link={link} />}
       </div>
 
       <div className="flex flex-wrap">
         {tags?.map((tag, index) => (
-          <span
+          <button
             key={index}
-            className="mr-3 my-1.5 px-3 py-1 rounded-lg bg-blue-3 text-blue-4 text-[11px] font-bold cursor-pointer"
+            className="mr-3 my-1.5 px-3 py-1 rounded-lg bg-blue-3 text-blue-4 text-[11px] font-bold cursor-pointer hover:bg-blue-4 hover:text-blue-3"
+            onClick={() => setTagFilter(tag)}
           >
             #{tag}
-          </span>
+          </button>
         ))}
       </div>
 
