@@ -15,8 +15,8 @@ function CopyLink({ link }: { link: string | undefined }) {
   return (
     <button
       className={`${
-        copied ? "text-gray-3" : "text-gray-1"
-      } hover:text-gray-3 size-7 cursor-pointer`}
+        copied ? "text-secondary-txt" : "text-disabled-txt"
+      } hover:text-secondary-txt size-7 cursor-pointer`}
       onClick={handleCopy}
     >
       {link ? copied ? <DoubleTick /> : <Link /> : <Link />}

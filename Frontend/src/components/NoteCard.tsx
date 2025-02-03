@@ -78,25 +78,25 @@ const NoteCard = memo(function NoteCard({
   };
 
   return (
-    <div className="w-full p-7.5 border border-gray-200 rounded-xl bg-white">
+    <div className="w-full p-7.5 border border-border rounded-xl bg-card-bg">
       <div className="flex items-start justify-between border-b pb-4">
         <div className="flex items-center">
           <a
             href={link}
             target="_blank"
-            className="size-10 text-gray-2 hover:text-gray-3 cursor-pointer mr-4"
+            className="size-10 text-placeholder-txt hover:text-secondary-txt cursor-pointer mr-4"
           >
             {typeIcons[type]}
           </a>
         </div>
-        <p className="font-bold text-gray-3 whitespace-wrap text-[15px]">
+        <p className="font-bold text-primary-txt whitespace-wrap text-[15px]">
           {title}
         </p>
         <div className="flex mt-1 items-center gap-5">
           <CopyLink link={link} />
           {!sharedBrain && (
             <button
-              className="text-gray-1 hover:text-gray-3 size-7 cursor-pointer"
+              className="text-disabled-txt hover:text-secondary-txt size-7 cursor-pointer"
               onClick={handleDelete}
             >
               <Trash />

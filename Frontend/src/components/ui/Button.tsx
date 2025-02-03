@@ -12,8 +12,8 @@ interface Props {
 }
 
 const buttonVariants = {
-  primary: "bg-blue-2 text-white",
-  secondary: "bg-blue-1 text-blue-2",
+  primary: "bg-primaryBtn-bg text-primaryBtn-txt",
+  secondary: "bg-secondaryBtn-bg text-secondaryBtn-txt",
 };
 
 const defaultStyle =

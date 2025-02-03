@@ -1,9 +1,9 @@
-import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
-import UserPlusIcon from "../components/icons/UserPlusIcon";
 import axios from "axios";
+import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import UserPlusIcon from "../../components/icons/UserPlusIcon";
 
-function LoginPage() {
+function SignUpPage() {
   const navigate = useNavigate();
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
@@ -16,7 +16,7 @@ function LoginPage() {
   const handleChangeUsername = (e: ChangeEvent<HTMLInputElement>) => {
     if (!/^[a-zA-Z0-9_.-]*$/.test(e.target.value)) {
       setErrors({
-        username: "Username must only contain alphanumeric or _",
+        username: "Username must only contain letters",
         password: errors.password,
       });
     } else if (e.target.value.length < 5) {
@@ -57,7 +57,6 @@ function LoginPage() {
 
   const handleUsernameEnter = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      console.log(document.cookie);
       passwordRef.current?.focus();
     }
   };
@@ -71,11 +70,11 @@ function LoginPage() {
     if (errors.username || errors.password) {
       return;
     }
-    const response = await axios.post("/api/v1/user/signin", {
+    const response = await axios.post("/api/v1/user/signup", {
       username: usernameRef.current?.value,
       password: passwordRef.current?.value,
     });
-    if (response.status === 403) console.log("Wrong password or username");
+    if (response.status === 400) console.log("User already exist");
     navigate("/");
   };
 
@@ -92,7 +91,7 @@ function LoginPage() {
         <div className="max-w-screen-xl bg-gray-4 flex justify-center flex-1 items-center">
           <div className="lg:w-1/2 xl:w-5/12 py-15 px-6 sm:px-12 bg-white flex shadow-md rounded-2xl justify-center items-center h-fit">
             <div className="flex flex-col items-center">
-              <h1 className="text-2xl xl:text-3xl font-extrabold">Login</h1>
+              <h1 className="text-2xl xl:text-3xl font-extrabold">Sign Up</h1>
               <div className="w-full flex-1 mt-12">
                 <div className="flex flex-col items-center">
                   <button className="w-full cursor-pointer max-w-xs font-bold shadow-sm rounded-lg py-3 bg-blue-1 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline">
@@ -116,7 +115,7 @@ function LoginPage() {
                         />
                       </svg>
                     </div>
-                    <span className="ml-4">Login with Google</span>
+                    <span className="ml-4">Sign Up with Google</span>
                   </button>
 
                   <button className="w-full cursor-pointer max-w-xs font-bold shadow-sm rounded-lg py-3 bg-blue-1 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline mt-10">
@@ -128,24 +127,24 @@ function LoginPage() {
                         />
                       </svg>
                     </div>
-                    <span className="ml-4">Login with GitHub</span>
+                    <span className="ml-4">Sign Up with GitHub</span>
                   </button>
                 </div>
 
                 <div className="my-12 border-b text-center">
                   <div className="leading-none px-4 inline-block text-sm text-gray-600 tracking-wide font-medium bg-white transform translate-y-3/5">
-                    Or login with username
+                    Or sign Up with username
                   </div>
                 </div>
 
                 <div className="mx-auto max-w-xs">
                   <input
-                    autoFocus
                     ref={usernameRef}
-                    onKeyUp={handleUsernameEnter}
-                    type="text"
+                    autoFocus
                     className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
-                    placeholder="Username"
+                    type="text"
+                    placeholder="username"
+                    onKeyUp={handleUsernameEnter}
                     onChange={handleChangeUsername}
                   />
                   <small className="text-red-600 font-medium">
@@ -153,31 +152,28 @@ function LoginPage() {
                   </small>
                   <input
                     ref={passwordRef}
-                    onKeyUp={handlePasswordEnter}
                     className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-7.5"
                     type="password"
                     placeholder="Password"
+                    onKeyUp={handlePasswordEnter}
                     onChange={handleChangePassword}
                   />
                   <small className="text-red-600 font-medium">
                     {errors.password}
                   </small>
-                  <button
-                    onClick={handleSubmit}
-                    className="mt-7.5 cursor-pointer tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
-                  >
+                  <button className="mt-7.5 cursor-pointer tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
                     <span className="w-12 h-12 -ml-4">
                       <UserPlusIcon />
                     </span>
-                    <span className="ml-3">Login</span>
+                    <span className="ml-3">Sign Up</span>
                   </button>
                   <p className="mt-9 text-xs text-gray-600 text-center">
-                    Don't have an account:
+                    Already have an account:
                     <button
-                      onClick={() => navigate("/signup")}
+                      onClick={() => navigate("/login")}
                       className="hover:border-b-2 font-bold ml-3 cursor-pointer"
                     >
-                      Create a new account
+                      Login
                     </button>
                   </p>
                 </div>
@@ -190,4 +186,4 @@ function LoginPage() {
   );
 }
 
-export default LoginPage;
+export default SignUpPage;

@@ -19,7 +19,7 @@ function NavBar({ sharedBrain = false }: { sharedBrain?: boolean }) {
   };
 
   return (
-    <div className="sticky top-0 w-full bg-white py-5 pr-15 pl-10 flex justify-between items-center z-999">
+    <div className="sticky top-0 w-full bg-card-bg py-5 pr-15 pl-10 flex justify-between items-center z-999">
       <button className="size-20 cursor-pointer" onClick={() => navigate("/")}>
         <Brain />
       </button>

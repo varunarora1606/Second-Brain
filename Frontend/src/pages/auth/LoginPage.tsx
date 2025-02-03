@@ -1,9 +1,9 @@
-import axios from "axios";
 import { ChangeEvent, KeyboardEvent, useEffect, useRef, useState } from "react";
+import UserPlusIcon from "../../components/icons/UserPlusIcon";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import UserPlusIcon from "../components/icons/UserPlusIcon";
 
-function SignUpPage() {
+function LoginPage() {
   const navigate = useNavigate();
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
@@ -16,7 +16,7 @@ function SignUpPage() {
   const handleChangeUsername = (e: ChangeEvent<HTMLInputElement>) => {
     if (!/^[a-zA-Z0-9_.-]*$/.test(e.target.value)) {
       setErrors({
-        username: "Username must only contain letters",
+        username: "Username must only contain alphanumeric or _",
         password: errors.password,
       });
     } else if (e.target.value.length < 5) {
@@ -57,6 +57,7 @@ function SignUpPage() {
 
   const handleUsernameEnter = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
+      console.log(document.cookie);
       passwordRef.current?.focus();
     }
   };
@@ -70,11 +71,11 @@ function SignUpPage() {
     if (errors.username || errors.password) {
       return;
     }
-    const response = await axios.post("/api/v1/user/signup", {
+    const response = await axios.post("/api/v1/user/signin", {
       username: usernameRef.current?.value,
       password: passwordRef.current?.value,
     });
-    if (response.status === 400) console.log("User already exist");
+    if (response.status === 403) console.log("Wrong password or username");
     navigate("/");
   };
 
@@ -86,16 +87,16 @@ function SignUpPage() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-4 text-gray-900 flex justify-center">
+    <div className="min-h-screen bg-main-bg text-primary-txt flex justify-center">
       {!loading && (
-        <div className="max-w-screen-xl bg-gray-4 flex justify-center flex-1 items-center">
-          <div className="lg:w-1/2 xl:w-5/12 py-15 px-6 sm:px-12 bg-white flex shadow-md rounded-2xl justify-center items-center h-fit">
+        <div className="max-w-screen-xl bg-main-bg flex justify-center flex-1 items-center">
+          <div className="lg:w-1/2 xl:w-5/12 py-15 px-6 sm:px-12 bg-card-bg flex shadow-md rounded-2xl justify-center items-center h-fit">
             <div className="flex flex-col items-center">
-              <h1 className="text-2xl xl:text-3xl font-extrabold">Sign Up</h1>
+              <h1 className="text-2xl xl:text-3xl font-extrabold">Login</h1>
               <div className="w-full flex-1 mt-12">
                 <div className="flex flex-col items-center">
                   <button className="w-full cursor-pointer max-w-xs font-bold shadow-sm rounded-lg py-3 bg-blue-1 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline">
-                    <div className="bg-white p-2 rounded-full">
+                    <div className="bg-card-bg p-2 rounded-full">
                       <svg className="w-10" viewBox="0 0 533.5 544.3">
                         <path
                           d="M533.5 278.4c0-18.5-1.5-37.1-4.7-55.3H272.1v104.8h147c-6.1 33.8-25.7 63.7-54.4 82.7v68h87.7c51.5-47.4 81.1-117.4 81.1-200.2z"
@@ -115,11 +116,11 @@ function SignUpPage() {
                         />
                       </svg>
                     </div>
-                    <span className="ml-4">Sign Up with Google</span>
+                    <span className="ml-4">Login with Google</span>
                   </button>
 
                   <button className="w-full cursor-pointer max-w-xs font-bold shadow-sm rounded-lg py-3 bg-blue-1 text-gray-800 flex items-center justify-center transition-all duration-300 ease-in-out focus:outline-none hover:shadow focus:shadow-sm focus:shadow-outline mt-10">
-                    <div className="bg-white p-1 rounded-full">
+                    <div className="bg-card-bg p-1 rounded-full">
                       <svg className="w-12" viewBox="0 0 32 32">
                         <path
                           fillRule="evenodd"
@@ -127,24 +128,24 @@ function SignUpPage() {
                         />
                       </svg>
                     </div>
-                    <span className="ml-4">Sign Up with GitHub</span>
+                    <span className="ml-4">Login with GitHub</span>
                   </button>
                 </div>
 
                 <div className="my-12 border-b text-center">
-                  <div className="leading-none px-4 inline-block text-sm text-gray-600 tracking-wide font-medium bg-white transform translate-y-3/5">
-                    Or sign Up with username
+                  <div className="leading-none px-4 inline-block text-sm text-gray-600 tracking-wide font-medium bg-card-bg transform translate-y-3/5">
+                    Or login with username
                   </div>
                 </div>
 
                 <div className="mx-auto max-w-xs">
                   <input
-                    ref={usernameRef}
                     autoFocus
-                    className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white"
-                    type="text"
-                    placeholder="username"
+                    ref={usernameRef}
                     onKeyUp={handleUsernameEnter}
+                    type="text"
+                    className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-main-bg00 focus:bg-card-bg"
+                    placeholder="Username"
                     onChange={handleChangeUsername}
                   />
                   <small className="text-red-600 font-medium">
@@ -152,28 +153,31 @@ function SignUpPage() {
                   </small>
                   <input
                     ref={passwordRef}
-                    className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-gray-400 focus:bg-white mt-7.5"
+                    onKeyUp={handlePasswordEnter}
+                    className="w-full px-8 py-4 rounded-lg font-medium bg-gray-100 border border-gray-200 placeholder-gray-500 text-sm focus:outline-none focus:border-main-bg00 focus:bg-card-bg mt-7.5"
                     type="password"
                     placeholder="Password"
-                    onKeyUp={handlePasswordEnter}
                     onChange={handleChangePassword}
                   />
-                  <small className="text-red-600 font-medium">
+                  <small className="text-error-msg font-medium">
                     {errors.password}
                   </small>
-                  <button className="mt-7.5 cursor-pointer tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none">
+                  <button
+                    onClick={handleSubmit}
+                    className="mt-7.5 cursor-pointer tracking-wide font-semibold bg-indigo-500 text-gray-100 w-full py-4 rounded-lg hover:bg-indigo-700 transition-all duration-300 ease-in-out flex items-center justify-center focus:shadow-outline focus:outline-none"
+                  >
                     <span className="w-12 h-12 -ml-4">
                       <UserPlusIcon />
                     </span>
-                    <span className="ml-3">Sign Up</span>
+                    <span className="ml-3">Login</span>
                   </button>
                   <p className="mt-9 text-xs text-gray-600 text-center">
-                    Already have an account:
+                    Don't have an account:
                     <button
-                      onClick={() => navigate("/login")}
+                      onClick={() => navigate("/signup")}
                       className="hover:border-b-2 font-bold ml-3 cursor-pointer"
                     >
-                      Login
+                      Create a new account
                     </button>
                   </p>
                 </div>
@@ -186,4 +190,4 @@ function SignUpPage() {
   );
 }
 
-export default SignUpPage;
+export default LoginPage;

@@ -1,17 +1,11 @@
-import {
-  DialogTitle,
-  Modal,
-  ModalClose,
-  ModalDialog,
-  Stack,
-} from "@mui/joy";
+import { DialogTitle, Modal, ModalClose, ModalDialog, Stack } from "@mui/joy";
 import { FormEvent, KeyboardEvent, useRef, useState } from "react";
 import axios from "axios";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { IMemory, memoryState } from "../store/memoryState";
 import { modalOpenState } from "../store/modalOpenState";
-import Button from "../components/ui/Button";
-import Cross from "../components/icons/Cross";
+import Button from "./ui/Button";
+import Cross from "./icons/Cross";
 // import Link from "../components/icons/Link";
 
 function ModalPage() {
@@ -26,7 +20,7 @@ function ModalPage() {
   const handleEnter = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key == "Enter" && e.currentTarget.value) {
       if (tags.includes(e.currentTarget.value.toLowerCase().trim())) return;
-      const newTag = e.currentTarget.value.toLowerCase().trim()
+      const newTag = e.currentTarget.value.toLowerCase().trim();
       setTags((prev) => [newTag, ...prev]);
       e.currentTarget.value = "";
     }
@@ -42,7 +36,7 @@ function ModalPage() {
       setOpen(false);
       return;
     }
-    let newTags = tags
+    let newTags = tags;
     if (tagRef.current?.value) {
       const newTag = tagRef.current?.value?.toLowerCase().trim();
       if (newTag && newTag.length > 0 && !tags.includes(newTag)) {

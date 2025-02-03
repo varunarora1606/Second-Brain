@@ -1,6 +1,6 @@
 import BrainSpace from "../components/BrainSpace";
 import NavBar from "../components/NavBar";
-import ModalPage from "./ModalPage";
+import ModalPage from "../components/ModalPage";
 
 function BrainPage() {
   return (
