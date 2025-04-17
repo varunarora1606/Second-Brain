@@ -52,6 +52,16 @@ function BrainNavbar() {
         Twitter
       </button>
       <button
+        className={`${
+          typeFilter == "idea"
+            ? "bg-tertiaryBtn-bg text-tertiaryBtn-txt"
+            : "text-black hover:bg-tertiaryBtn-hover-bg hover:text-tertiaryBtn-hover-txt"
+        } font-semibold py-1 px-6 cursor-pointer rounded-2xl`}
+        onClick={() => setTypeFilter("idea")}
+      >git
+        Idea
+      </button>
+      <button
         className={`bg-tertiaryBtn-bg text-tertiaryBtn-txt font-semibold ${
           tagFilter ? "py-1 pl-6 pr-4" : ""
         } rounded-2xl flex items-center`}
